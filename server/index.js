@@ -5,13 +5,13 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 app.use(cors());
 
-let userRooms={// ilgili odalardaki kullanıcı listesini tutan obje  1.odada ahmet ve mehmet va
+let userRooms={
   1:[{userId:"socketId",username:"kamil"}]
 }
 
 const server = http.createServer(app);
 
-const io = new Server(server, {//frontend bölümüde cors hatası almamak için  3000.port a işlem izni ver.
+const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
@@ -44,18 +44,18 @@ io.on("connection", (socket) => {//server a bağlanıldığında çalışır.
       if (userRooms[room].find((user) => user.userId === userId)) {
         // kullanıcının olduğu odayı bul
         userRoom = room;
-        userRooms[userRoom] = userRooms[userRoom].filter((user) => user.userId !== userId); // kullanıcıyı listeden çıkar
+        userRooms[userRoom] = userRooms[userRoom].filter((user) => user.userId !== userId);
         break;
       }
     }
     if (userRoom) {
-      io.to(userRoom).emit("user_list", userRooms[userRoom]); // odaya kalan kullanıcıları gönder
+      io.to(userRoom).emit("user_list", userRooms[userRoom]);
     }
   });
 
 
-  socket.on("send_message", (data) => {//server a gelen mesajı
-    socket.to(data.room).emit("messageReturn", data);//frontend de karşılı serverdan gönderiyorum 
+  socket.on("send_message", (data) => {
+    socket.to(data.room).emit("messageReturn", data);
   });
 
 });
